@@ -445,7 +445,6 @@ function! s:sink(lines)
 
   let default_cmd = 'edit'
   let cmd = get({
-                \ 'ctrl-b': 'backlink',
                 \ 'ctrl-l': 'link',
                 \ 'ctrl-x': 'split',
                 \ 'ctrl-v': 'vertical split',
