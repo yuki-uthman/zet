@@ -50,7 +50,8 @@ function! s:get_comment_symbol(ext) "{{{
         \ 'rb' : '#',
         \ 'py' : '#',
         \ 'js' : '//',
-        \ 'vim' : '"', 
+        \ 'vim' : '"',
+        \ 'lua' : '--',
         \}
   return get(comment_symbols, a:ext, '')
 
@@ -117,7 +118,7 @@ function! s:build_filter(tags) "{{{
   let prev = ""
   for tag in a:tags
 
-    let filter = "$(rg -l -S '" . tag . "'"
+    let filter = "(rg -l -S '" . tag . "'"
     if !empty(prev)
       let filter = filter . " " . prev
     endif
@@ -152,7 +153,7 @@ function! s:get_markdown_link(text, link) "{{{
   return '[' . a:text . ']' . '(' . a:link . ')'
 endfunction "}}}
 
-function! HandleFZF(file) "{{{
+function! HandleFZF(file)
     let absolute_path = fnameescape(fnamemodify(a:file, ":p"))
     let filename = fnameescape(fnamemodify(a:file, ":t"))
     "why only the tail ?  I believe the whole filename must be linked unless everything is flat ...
@@ -164,7 +165,6 @@ function! HandleFZF(file) "{{{
 endfunction
 command! -nargs=1 HandleFZF          :call HandleFZF(<f-args>)
 command! ZetLink :call fzf#run(fzf#wrap({'sink' : 'HandleFZF', 'down' : '25%' }))
-"}}}
 
 function! s:is_commented() abort "{{{
   let syntax = synIDattr(synIDtrans(synID(line("."), col("."), 1)), "name")
@@ -294,10 +294,11 @@ func! s:new_note(mode) range
   endif
 
   " always put # in the title for any files
-  let title = s:get_comment_symbol(ext) . '# ' . title
+  let title = s:get_comment_symbol(ext) . ' # ' . title
 
   exec "normal! i" . title
-  exec "normal! o\<C-U>\<C-j>\<C-j>\<C-j>"
+  " exec "normal! o\<C-U>\<C-j>\<C-j>\<C-j>"
+
 
   " insert backlink in the new note if backlink exists" [hello world](2107220805)
   if !empty(backlink_id)
@@ -505,7 +506,7 @@ function! s:search()
              \ 'sink*'   : function("s:sink"),
              \}
 
-
+  " call Decho(string(fzf#vim#with_preview(spec, "up")))
   call fzf#run(fzf#vim#with_preview(spec, "up"))
 
 endfunction
