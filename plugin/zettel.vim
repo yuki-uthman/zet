@@ -1,5 +1,5 @@
 
-let g:zet_dir = "~/.zettel"
+let g:zet_dir = "~/Dropbox/zettel"
 
 " search config for fzf
 let g:zet_search_command = "rg  --line-number --no-heading --color=always --smart-case -H ''"
