@@ -288,9 +288,6 @@ func! s:new_note(mode) range
   if a:mode ==# 'n'
     exec "edit " . filename
   else
-    " open the new zettel note in a float
-    let options = get(g:, 'zet_float_window_options', s:default_float_window_options)
-    call float#edit(filename, options)
   endif
 
   " always put # in the title for any files
@@ -582,7 +579,7 @@ function! s:open_todo(focus)
 
   " open it in a float
   let options = get(g:, 'zet_todo_window_options', s:default_todo_window_options)
-  let w:todo_window = float#edit(todo_filepath, options)
+  exec "edit " . todo_filepath
 
   " set the window id to the zettel id
   " how to add key/value to a dict [add to dictionary](2107240418)
