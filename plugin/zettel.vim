@@ -8,7 +8,7 @@ let g:zet_search_options = '
                           \ --expect=ctrl-t,ctrl-v,ctrl-x,ctrl-b,ctrl-l
                           \ --ansi
                           \ --delimiter :
-                          \ --bind=up:preview-up,down:preview-down
+                          \ --bind=ctrl-y:preview-up,ctrl-e:preview-down
                           \ --preview ''bat --style=numbers --color=always --highlight-line {2} {1}''
                           \ --preview-window +{2}-/2
                           \ --preview-window=up:80%
