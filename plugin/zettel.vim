@@ -130,8 +130,8 @@ function! s:build_filter(tags) "{{{
 endfunction "}}}
 
 function! s:copy_cursor_position() " {{{
-  let @+ = join([expand('%:p:~'),  line(".")], ':')
 endfunction "}}}
+  let @* = join([expand('%:t:r'),  line(".")], ':') " [expand %:t:r](2012071749:5)
 
 function! s:get_filepath_from_id(id) abort "{{{
   " needs to use systemlist cuz the result contains newline character
