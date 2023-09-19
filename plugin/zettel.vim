@@ -37,6 +37,13 @@ let s:default_float_window_options = {
 
 let s:default_format = "%y%m%d%H%M"
 
+""
+" Whether the {value} is empty
+function! s:value_empty(value)
+  let empty_value = maktaba#value#EmptyValue(a:value)
+  return maktaba#value#IsEqual(a:value, empty_value)
+endfunction
+
 function! s:comment_symbol() abort "{{{
   return split(get(b:, 'commentary_format', substitute(substitute(substitute(
         \ &commentstring, '^$', '%s', ''), '\S\zs%s',' %s', '') ,'%s\ze\S', '%s ', '')), '%s', 1)[0]
@@ -137,7 +144,7 @@ function! s:get_filepath_from_id(id) abort "{{{
   " needs to use systemlist cuz the result contains newline character
   let file = systemlist("rg --files " . expand(g:zet_dir) . "| rg " . a:id)
 
-  if yuki#value#IsEmpty(file)
+  if s:value_empty(file)
     throw maktaba#error#Message('ZettelNotFound', 'No such zettel(%s)', a:id)
   endif
 
@@ -318,7 +325,7 @@ endfunc
 function! s:extract_file(string)
   let match = matchlist(a:string, '\(\~\/.*\.\w*\):\?\(\d*\)\?')
 
-  if yuki#value#IsEmpty(match)
+  if s:value_empty(match)
     return maktaba#value#EmptyValue(match)
   endif
 
@@ -333,14 +340,14 @@ endfunction
 function! s:extract_zettel(string)
   let match = matchlist(a:string, '\(\d\{10}\)\(\.\w*\)\?:\?\(\d*\)')
 
-  if yuki#value#IsEmpty(match)
+  if s:value_empty(match)
     return maktaba#value#EmptyValue(match)
   endif
 
   let id = match[1]
   let filepath = s:get_filepath_from_id(id)
 
-  if yuki#value#IsEmpty(filepath)
+  if s:value_empty(filepath)
     return maktaba#value#EmptyValue(match)
   endif
 
@@ -355,7 +362,7 @@ endfunction
 
 function! s:extract_jump_location(string) "{{{
   let match = matchstr(a:string, '(\zs\d\{1,9}\ze)')
-  if !yuki#value#IsEmpty(match)
+  if !s:value_empty(match)
     let file = {}
     let file.path = expand('%:p')
     let file.line_number = str2nr(match)
@@ -363,7 +370,7 @@ function! s:extract_jump_location(string) "{{{
   endif
 
   let match = matchlist(a:string, '\(\d\{10}\)\(\.\w*\)\?:\?\(\d*\)')
-  if !yuki#value#IsEmpty(match)
+  if !s:value_empty(match)
     let id = match[1]
     let filepath = s:get_filepath_from_id(id)
     let line_number = str2nr(match[3])
@@ -375,7 +382,7 @@ function! s:extract_jump_location(string) "{{{
   endif
 
   let match = matchlist(a:string, '\(\~\/.*\.\w*\):\?\(\d*\)\?')
-  if !yuki#value#IsEmpty(match)
+  if !s:value_empty(match)
     let file = {}
     let file.path = expand(match[1])
     call maktaba#ensure#FileWritable(file.path)
@@ -406,7 +413,7 @@ function! s:jump_to_zettel() abort
     return
   endtry
 
-  if !yuki#value#IsEmpty(jump_location)
+  if !s:value_empty(jump_location)
     let is_todo_open = getwinvar(winnr(), 'todo', 0)
     if is_todo_open
       exec "wincmd p"
