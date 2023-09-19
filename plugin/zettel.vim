@@ -294,9 +294,10 @@ func! s:new_note(mode) range
   endif
 
   " always put # in the title for any files
-  let title = s:get_comment_symbol(ext) . ' # ' . title
+  " let title = s:get_comment_symbol(ext) . ' # ' . title
 
   exec "normal! i" . title
+  exec "normal gcc"
   " exec "normal! o\<C-U>\<C-j>\<C-j>\<C-j>"
 
 
